@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os
 from selenium.webdriver.support.ui import Select
 
 # ระบุพาธของ ChromeDriver 
@@ -22,19 +23,20 @@ open_modal_button = driver.find_element(By.XPATH, "//span[text()='เข้า�
 open_modal_button.click()
 
 # ระบุ element ของรหัสประจำตัวประชาชนและรหัสผ่านใน Modal
-id_input = driver.find_element(By.XPATH, "//label[text()='รหัสประจำตัวประชาชน']/following-sibling::input")
-password_input = driver.find_element(By.XPATH, "//label[text()='รหัสผ่าน']/following-sibling::input")
+def test_login(self):
+    open_modal_button = self.driver.find_element(By.XPATH, "//span[text()='เข้าสู่ระบบ']")
+    open_modal_button.click()
 
-# กรอกข้อมูลใน input field
-id_input.send_keys("8888888888888")
-password_input.send_keys("123456")
+    id_input = self.driver.find_element(By.XPATH, "//label[text()='รหัสประจำตัวประชาชน']/following-sibling::input")
+    password_input = self.driver.find_element(By.XPATH, "//label[text()='รหัสผ่าน']/following-sibling::input")
 
-time.sleep(2)
+    # กรอกข้อมูลใน input field
+    id_input.send_keys("8888888888888")
+    password_input.send_keys("123456")
 
-# คลิกปุ่ม "เข้าสู่ระบบ" ด้วย XPath
-login_button = driver.find_element(By.XPATH, "//button[text()='เข้าสู่ระบบ']")
-login_button.click()
-time.sleep(3)
+    login_button = self.driver.find_element(By.XPATH, "//button[text()='เข้าสู่ระบบ']")
+    login_button.click()
+    time.sleep(3)
 
 # ค้นหา <div> โดยใช้ XPath
 div_element = driver.find_element(By.XPATH, '//div[contains(text(), "จัดการ")]')
@@ -53,27 +55,47 @@ create_button = driver.find_element(By.ID, 'doctor_create')
 create_button.click()
 time.sleep(3)
 
-# คลิกที่ช่องเลือกคำนำหน้า และ คลิกเลือกที่ช่อง แพทย์หญิง
+# เพิ่มรูป
+# หาก input element สำหรับอัปโหลดไฟล์มี ID ให้ใช้ ID ในการระบุ
+upload_input = driver.find_element(By.ID, "doctor_createdoctor_image")
+
+# ใช้ send_keys เพื่อใส่พาธของไฟล์ที่คุณต้องการอัปโหลดลงใน input element
+file_name = "Adddoctest-image.jpg"
+Videos = os.path.expanduser("~\\Videos")  # หากใช้ Windows
+file_path = os.path.join(Videos, file_name)
+upload_input.send_keys(file_path)
+time.sleep(5)
+
+# คลิกที่ช่องเลือกคำนำหน้า และ คลิกเลือกที่ช่อง นายแพทย์
 doctor_prefix_element = driver.find_element(By.ID, 'doctor_createprefix_name')
 doctor_prefix_element.click()
 select_doctor_prefix = Select(doctor_prefix_element)
 select_doctor_prefix.select_by_index(3)
+
 # ใส่ชื่อหมอ ในช่อง'ชื่อ'
 doctor_first_name_element = driver.find_element(By.ID, 'doctor_doctor_first_name')
-doctor_first_name_element.send_keys("เทส")
+doctor_first_name_element.send_keys("คอปเตอร์")
+
 # ใส่นามสกุลหมอ ในช่อง'นามสกุล'
 doctor_last_name_element = driver.find_element(By.ID, 'doctor_doctor_last_name')
-doctor_last_name_element.send_keys("การเพิ่ม")
+doctor_last_name_element.send_keys("ไม้ไผ่")
+
+# ใส่นามสกุลหมอ ในช่อง'นามสกุล'
+doctor_last_name_element = driver.find_element(By.ID, 'doctor_phone')
+doctor_last_name_element.send_keys("0998887777")
+
 # คลิกที่ช่อง เลือกสถานะการใช้งาน # คลิกเลือกที่ช่อง พักงาน
 doctor_status_element = driver.find_element(By.ID, 'doctor_doctor_doctor_status')
 doctor_status_element.click()
 select_doctor_status =Select(doctor_status_element)
-select_doctor_status.select_by_index(2)
+select_doctor_status.select_by_index(1)
+
 # คลิกที่ช่องเลือกแผนก # เลือกแผนก
 doctor_department_element = driver.find_element(By.ID, 'doctor_doctor_doctor_department_id')
 doctor_department_element.click()
 select_doctor_department = Select(doctor_department_element)
-select_doctor_department.select_by_index(4)
+select_doctor_department.select_by_index(3)
+
 # เลือก ตกลง เพิ่มแพทย์
 submit_doctor_button = driver.find_element(By.ID, 'Doctor_Createsubmit')
 submit_doctor_button.click()
